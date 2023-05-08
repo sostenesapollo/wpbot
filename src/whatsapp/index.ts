@@ -54,13 +54,16 @@ export default class WP {
   }
   
   initWhatsappBots () {
-    logger.info('Initializing whatsapp bots')
-    db.bot.findMany().then((bots) =>
-      bots.map((databaseBot)=>{
-        if(!databaseBot.name) { return logger.warn('Bot name not found', databaseBot) }
-        this._initBot(databaseBot)
-      })
-    )
+    logger.info('Initializing whatsapp bots');
+
+    db.$connect().then(()=>{
+      db.bot.findMany().then((bots) =>
+        bots.map((databaseBot)=>{
+          if(!databaseBot.name) { return logger.warn('Bot name not found', databaseBot) }
+          this._initBot(databaseBot)
+        })
+      )
+    })
   }
   
   onSessionReady(client: Whatsapp) {
